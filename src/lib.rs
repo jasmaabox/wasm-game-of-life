@@ -49,9 +49,27 @@ impl Universe {
         count
     }
 
-    pub fn set_alive(&mut self, row: u32, col: u32) {
-        let idx = self.get_index(row, col);
-        self.cells[idx] = Cell::Alive;
+    pub fn set_width(&mut self, width: u32) {
+        self.width = width;
+        let cells = (0..self.height * width).map(|_| Cell::Dead).collect();
+        self.cells = cells;
+    }
+
+    pub fn set_height(&mut self, height: u32) {
+        self.height = height;
+        let cells = (0..height * self.width).map(|_| Cell::Dead).collect();
+        self.cells = cells;
+    }
+
+    pub fn get_cells(&self) -> &[Cell] {
+        &self.cells
+    }
+
+    pub fn set_cells(&mut self, cells: &[(u32, u32)]) {
+        for (row, col) in cells.iter().cloned() {
+            let idx = self.get_index(row, col);
+            self.cells[idx] = Cell::Alive;
+        }
     }
 }
 
@@ -124,11 +142,8 @@ impl Universe {
     }
 
     pub fn generate_glider(&mut self) {
-        self.set_alive(1, 2);
-        self.set_alive(2, 3);
-        self.set_alive(3, 1);
-        self.set_alive(3, 2);
-        self.set_alive(3, 3);
+        let cells = [(1, 2), (2, 3), (3, 1), (3, 2), (3, 3)];
+        self.set_cells(&cells);
     }
 }
 
