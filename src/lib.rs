@@ -53,14 +53,6 @@ impl Universe {
         let idx = self.get_index(row, col);
         self.cells[idx] = Cell::Alive;
     }
-
-    pub fn generate_glider(&mut self) {
-        self.set_alive(1, 2);
-        self.set_alive(2, 3);
-        self.set_alive(3, 1);
-        self.set_alive(3, 2);
-        self.set_alive(3, 3);
-    }
 }
 
 // Public methods for Javascript export
@@ -70,7 +62,14 @@ impl Universe {
         let width = 64;
         let height = 64;
         let cells = (0..width * height)
-            .map(|_| Cell::Dead)
+            .map(|_| {
+                let v = js_sys::Math::random();
+                if v > 0.5 {
+                    Cell::Alive
+                } else {
+                    Cell::Dead
+                }
+            })
             .collect();
 
         let mut universe = Universe {
@@ -80,7 +79,6 @@ impl Universe {
         };
 
         universe.generate_glider();
-
         universe
     }
 
@@ -123,6 +121,14 @@ impl Universe {
 
         // Replace current cells with buffer
         self.cells = next;
+    }
+
+    pub fn generate_glider(&mut self) {
+        self.set_alive(1, 2);
+        self.set_alive(2, 3);
+        self.set_alive(3, 1);
+        self.set_alive(3, 2);
+        self.set_alive(3, 3);
     }
 }
 

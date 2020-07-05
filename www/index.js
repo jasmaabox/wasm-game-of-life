@@ -12,12 +12,17 @@ const universe = Universe.new();
 const width = universe.width();
 const height = universe.height();
 
-// Get canvas DOM
+// Get DOM
 const canvas = document.getElementById("game-of-life-canvas");
 canvas.height = (CELL_SIZE + 1) * height + 1;
 canvas.width = (CELL_SIZE + 1) * width + 1;
 
 const ctx = canvas.getContext('2d');
+
+const gliderBut = document.getElementById('glider-but');
+gliderBut.onclick = () => {
+    universe.generate_glider();
+}
 
 /**
  * Get index from grid row and column
