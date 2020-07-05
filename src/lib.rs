@@ -48,30 +48,40 @@ impl Universe {
 
         count
     }
+
+    pub fn set_alive(&mut self, row: u32, col: u32) {
+        let idx = self.get_index(row, col);
+        self.cells[idx] = Cell::Alive;
+    }
+
+    pub fn generate_glider(&mut self) {
+        self.set_alive(1, 2);
+        self.set_alive(2, 3);
+        self.set_alive(3, 1);
+        self.set_alive(3, 2);
+        self.set_alive(3, 3);
+    }
 }
 
 // Public methods for Javascript export
 #[wasm_bindgen]
 impl Universe {
-
     pub fn new() -> Universe {
         let width = 64;
         let height = 64;
-
         let cells = (0..width * height)
-            .map(|i| {
-                if i % 2 == 0 || i % 7 == 0 {
-                    Cell::Alive
-                } else {
-                    Cell::Dead
-                }
-            })
+            .map(|_| Cell::Dead)
             .collect();
-        Universe {
+
+        let mut universe = Universe {
             width,
             height,
             cells,
-        }
+        };
+
+        universe.generate_glider();
+
+        universe
     }
 
     pub fn render(&self) -> String {
